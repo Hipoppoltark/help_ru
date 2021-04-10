@@ -10530,6 +10530,27 @@ section {
     padding: 0.3rem, 0.6rem;
 }
 
+.complaint {
+    border: 1px solid #000;
+    border-radius: 30px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.complaint:hover {
+    background-color: #ebe8e8;
+    text-decoration: none;
+    border: none;
+}
+
+.flag-item {
+    font-size: 18px !important;
+    color: #000;
+}
+
 @media (max-width: 991px) {
   .form-search {
     width: 100%;

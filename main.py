@@ -12,6 +12,7 @@ from data import db_session
 from data.records import Record
 from data.users import User
 from data.comments import Comment
+from data.complaints import Complaint
 from data.ratings import Rating
 
 from forms.register import RegisterForm
@@ -325,6 +326,13 @@ def set_rating_comment():
         db_sess.commit()
         return jsonify({"success": True, "new_value_comment": comment_estimation})
     return jsonify({"success": False})
+
+
+@app.route("/record/complaint/<int:comment_id>", methods=["POST"])
+@login_required
+def create_complaint(comment_id):
+    session = db_session.create_session()
+    complaint =
 
 
 if __name__ == '__main__':

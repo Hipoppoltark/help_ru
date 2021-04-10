@@ -15,7 +15,8 @@
                         {% endif %}
                     </div>
                     <p>{{record.description}}</p>
-                    {% if not record.is_finished and current_user.id != record.author and may_comment%}
+                    {% if not record.is_finished and current_user.id != record.author and
+                        may_comment and current_user.is_authenticated %}
                         <a href="/record/{{record.id}}/comment"
                            class="btn btn-outline-dark btn-sml">Помочь +{{record.cost}}</a>
                     {% endif %}
@@ -42,22 +43,28 @@
                     </div>
                     <p style="word-wrap: break-word;">{{comment.comment}}</p>
                     {% if current_user.id != comment.author %}
-                        <div class="record-stars d-flex">
-                            <div class="record-star-item" onclick="give_rating(1, {{comment.id}})">
-                                <img src="{{url_for('static', filename='images/star.png')}}" alt="помощь.ру">
+                        <div class="comment-bottom d-flex justify-content-between">
+                            <div class="record-stars d-flex">
+                                <div class="record-star-item" onclick="give_rating(1, {{comment.id}})">
+                                    <img src="{{url_for('static', filename='images/star.png')}}" alt="помощь.ру">
+                                </div>
+                                <div class="record-star-item" onclick="give_rating(2, {{comment.id}})">
+                                    <img src="{{url_for('static', filename='images/star.png')}}" alt="помощь.ру">
+                                </div>
+                                <div class="record-star-item" onclick="give_rating(3, {{comment.id}})">
+                                    <img src="{{url_for('static', filename='images/star.png')}}" alt="помощь.ру">
+                                </div>
+                                <div class="record-star-item" onclick="give_rating(4, {{comment.id}})">
+                                    <img src="{{url_for('static', filename='images/star.png')}}" alt="помощь.ру">
+                                </div>
+                                <div class="record-star-item" onclick="give_rating(5, {{comment.id}})">
+                                    <img src="{{url_for('static', filename='images/star.png')}}" alt="помощь.ру">
+                                </div>
                             </div>
-                            <div class="record-star-item" onclick="give_rating(2, {{comment.id}})">
-                                <img src="{{url_for('static', filename='images/star.png')}}" alt="помощь.ру">
-                            </div>
-                            <div class="record-star-item" onclick="give_rating(3, {{comment.id}})">
-                                <img src="{{url_for('static', filename='images/star.png')}}" alt="помощь.ру">
-                            </div>
-                            <div class="record-star-item" onclick="give_rating(4, {{comment.id}})">
-                                <img src="{{url_for('static', filename='images/star.png')}}" alt="помощь.ру">
-                            </div>
-                            <div class="record-star-item" onclick="give_rating(5, {{comment.id}})">
-                                <img src="{{url_for('static', filename='images/star.png')}}" alt="помощь.ру">
-                            </div>
+
+                            <a href="/record/complaint/{{comment.id}}" class="complaint">
+                                <i class="fa fa-flag-o flag-item" aria-hidden="true"></i>
+                            </a>
                         </div>
                     {% endif %}
                     {% if current_user.is_authenticated and current_user.id == comment.author and record.is_editable %}
