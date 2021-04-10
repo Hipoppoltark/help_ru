@@ -66,10 +66,34 @@ login_manager.init_app(app)
 
 @client.task
 def celery_editable_task(record_id):
+    """Фоновая задача. Через n время (после того, как запись считается закрытой)
+       запрщает редактировать запись и все комментарии к ней"""
     db_session.global_init("db/help.db")
     session = db_session.create_session()
     record = session.query(Record).get(record_id)
     record.is_editable = False
+    session.commit()
+    session.close()
+    db_session.close_session()
+
+
+@client.task
+def celery_processing_complaint(comment_id):
+    """Фоновая задача обработки жалобы (в течение n времени задача запускается и решает
+       нужно ли удалять комментарий или нет"""
+    db_session.global_init("db/help.db")
+    session = db_session.create_session()
+    comment = session.query(Comment).get(comment_id)
+    comment_points = comment.cost
+    record = session.query(Record).get(comment.record_id)
+    author_comment = session.query(User).get(comment.author)
+    if len(comment.complaints) >= len(comment.ratings):
+        session.delete(comment)
+        record.is_editable = True
+        record.is_finished = False
+        author_comment.points -= comment_points
+    else:
+        comment.pending_review = False
     session.commit()
     session.close()
     db_session.close_session()
@@ -331,8 +355,37 @@ def set_rating_comment():
 @app.route("/record/complaint/<int:comment_id>", methods=["POST"])
 @login_required
 def create_complaint(comment_id):
+    try:
+        session = db_session.create_session()
+        comment = session.query(Comment).get(comment_id)
+        comm_is_pending_review = comment.pending_review
+        complaint = Complaint()
+        complaint.author = current_user.id
+        complaint.comment_id = comment_id
+        comment.complaints.append(complaint)
+        session.merge(comment)
+        session.commit()
+        if not comm_is_pending_review:
+            celery_processing_complaint.apply_async(args=[comment_id], countdown=60)
+        return jsonify({'success': 'OK'})
+    except Exception:
+        return jsonify({'error': 'Fasle'})
+
+
+@app.route("/search", methods=["GET", "POST"])
+@login_required
+def search():
     session = db_session.create_session()
-    complaint =
+    params = {name: request.args.get(name) for name in ['q']}
+    records = []
+    records_all = session.query(Record).filter((Record.title.like(f'%{params["q"]}%')) |
+                                           (Record.description.like(f'%{params["q"]}%'))).all()
+    for record in records_all:
+        records.append((record, record.description[:250]))
+    param = {}
+    param['title'] = 'Работы'
+    param['records'] = records
+    return render_template('index.html', **param)
 
 
 if __name__ == '__main__':

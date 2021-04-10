@@ -7,12 +7,14 @@
             <div class="row justify-content-center position-relative">
                 <div class="col-sm-6 position-static">
                     <div class="p-3 record-block">
-                        <div class="title-record d-flex">
-                            <p class="mr-2">{{records[0][0].user.surname}} {{records[0][0].user.name}}</p>
-                            <p>{{records[0][0].title}}</p>
-                        </div>
-                        <p>{{records[0][1]}}</p>
-                        <a href="http://127.0.0.1:5000/record/{{records[0][0].id}}">Go somewhere</a>
+                        {% if records %}
+                            <div class="title-record d-flex">
+                                <p class="mr-2">{{records[0][0].user.surname}} {{records[0][0].user.name}}</p>
+                                <p>{{records[0][0].title}}</p>
+                            </div>
+                            <p>{{records[0][1]}}</p>
+                            <a href="http://127.0.0.1:5000/record/{{records[0][0].id}}">Go somewhere</a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-sm-4 position-static">

@@ -16,9 +16,11 @@ class Comment(SqlAlchemyBase, SerializerMixin):
     record_id = sqlalchemy.Column(sqlalchemy.Integer,
                                sqlalchemy.ForeignKey("records.id"))
     estimation = sqlalchemy.Column(sqlalchemy.Float, nullable=True, default=0.0)
+    pending_review = sqlalchemy.Column(sqlalchemy.Boolean,
+                                   default=False)
     date_create = sqlalchemy.Column(sqlalchemy.DateTime,
                                     default=datetime.datetime.now)
-    # users_who_gave_rating =
+    complaints = orm.relation('Complaint', back_populates='comment')
     user = orm.relation('User')
     record = orm.relation('Record')
     ratings = orm.relation('Rating', back_populates='comment')

@@ -62,9 +62,10 @@
                                 </div>
                             </div>
 
-                            <a href="/record/complaint/{{comment.id}}" class="complaint">
+                            <div onclick="make_complaint({{comment.id}})" class="complaint">
                                 <i class="fa fa-flag-o flag-item" aria-hidden="true"></i>
-                            </a>
+                            </div>
+                            <div class="message-complaint font-weight-medium text-dark"></div>
                         </div>
                     {% endif %}
                     {% if current_user.is_authenticated and current_user.id == comment.author and record.is_editable %}
