@@ -8,7 +8,7 @@ SqlAlchemyBase = dec.declarative_base()
 __factory = None
 
 
-def global_init(db_file) -> None:
+def global_init(db_file) -> SqlAlchemyBase:
     global __factory
 
     if __factory:
@@ -26,6 +26,8 @@ def global_init(db_file) -> None:
     from . import __all_models
 
     SqlAlchemyBase.metadata.create_all(engine)
+
+    return SqlAlchemyBase
 
 
 def create_session() -> Session:

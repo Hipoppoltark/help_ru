@@ -4,6 +4,7 @@ from flask import url_for, request, render_template, session, abort
 from flask import redirect, make_response, jsonify
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_migrate import Migrate
 from flask_restful import reqparse, abort, Api, Resource
 
 from flask_socketio import SocketIO, send
@@ -389,7 +390,9 @@ def search():
 
 
 if __name__ == '__main__':
-    db_session.global_init("db/help.db")
+    db = db_session.global_init("postgres://edfgqwwnxaatqk:21da450b0900c800d3db53aa7e48060cb58227e10a07d449e592"
+                           "9ef9f4819b7b@ec2-52-1-115-6.compute-1.amazonaws.com:5432/djjunfccgq5gk")
+    migrate = Migrate(app, db)
     # для списка объектов
     api.add_resource(record_resources.RecordListResource, '/api/records')
 
