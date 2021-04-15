@@ -1,1 +1,1 @@
-web: flask db init; flask db upgrade; python waitress_server.py
+web: flask db init; flask db upgrade; waitress-serve --port=$PORT waitress_server:app
