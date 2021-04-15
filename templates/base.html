@@ -45,14 +45,14 @@
 								<a class="nav-link" href="/profile/{{current_user.id}}">{{current_user.surname}} {{current_user.name}}</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link btn btn-success" href="http://127.0.0.1:5000/record">Попроси помощь</a>
+								<a class="nav-link btn btn-success" href="/record">Попроси помощь</a>
 							</li>
 						{% else %}
 							<li class="nav-item">
-								<a class="nav-link" href="http://127.0.0.1:5000/login">Войти</a>
+								<a class="nav-link" href="/login">Войти</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link btn btn-success" href="http://127.0.0.1:5000/register">Зарегистрироваться</a>
+								<a class="nav-link btn btn-success" href="/register">Зарегистрироваться</a>
 							</li>
 						{% endif %}
 					</ul>

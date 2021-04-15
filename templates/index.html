@@ -13,7 +13,7 @@
                                 <p>{{records[0][0].title}}</p>
                             </div>
                             <p>{{records[0][1]}}</p>
-                            <a href="http://127.0.0.1:5000/record/{{records[0][0].id}}">Go somewhere</a>
+                            <a href="/record/{{records[0][0].id}}">Go somewhere</a>
                         {% endif %}
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                             <p>{{record.title}}</p>
                         </div>
                         <p>{{description}}</p>
-                        <a href="http://127.0.0.1:5000/record/{{record.id}}">Go somewhere</a>
+                        <a href="/record/{{record.id}}">Go somewhere</a>
                     </div>
                 </div>
 
