@@ -1,11 +1,11 @@
 import datetime
 import sqlalchemy
-from .db_session import SqlAlchemyBase
+from app import db
 from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
 
-class Complaint(SqlAlchemyBase, SerializerMixin):
+class Complaint(db.Model, SerializerMixin):
     __tablename__ = 'complaints'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
