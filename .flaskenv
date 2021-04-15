@@ -1,1 +1,1 @@
-FLASK_APP=waitres_server.py
+FLASK_APP=waitress_server.py
