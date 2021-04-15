@@ -1,4 +1,5 @@
-from api import record_resources
+from app import db
+from app import login_manager
 from flask import Flask, flash
 from flask import url_for, request, render_template, session, abort
 from flask import redirect, make_response, jsonify
@@ -47,6 +48,9 @@ def check_password(hashed_password, user_password):
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres+psycopg2://edfgqwwnxaatqk:21da450b0900c800d3db53aa7e48060cb58227e' \
+                                        '10a07d449e5929ef9f4819b7b@ec2-52-1-115-6.compute-1.amazonaws.com:5432/djj' \
+                                        'unfccgq5gk'
 api = Api(app)
 client = Celery(app.name)
 client.config_from_object("celeryconfig")
@@ -59,9 +63,6 @@ class ContextTask(client.Task):
 
 
 client.Task = ContextTask
-
-login_manager = LoginManager()
-login_manager.init_app(app)
 
 
 @client.task
@@ -102,9 +103,8 @@ def celery_processing_complaint(comment_id):
 @app.route('/')
 def main():
     if current_user.is_authenticated:
-        db_sess = db_session.create_session()
         records = []
-        for record in db_sess.query(Record).filter(Record.author != current_user.id):
+        for record in Record.query.filter(Record.author != current_user.id):
             records.append((record, record.description[:250]))
         param = {}
         param['title'] = 'Работы'
@@ -131,9 +131,8 @@ def register_user():
             user.age = form.age.data
             user.hashed_password = hash_password(form.password.data)
             user.email = form.username.data
-            db_sess = db_session.create_session()
-            db_sess.add(user)
-            db_sess.commit()
+            db.session.add(user)
+            db.session.commit()
             return redirect('/login')
         return render_template('register.html', **param, form=form)
 
@@ -148,8 +147,7 @@ def load_user(user_id):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect("/")
